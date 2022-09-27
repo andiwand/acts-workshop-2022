@@ -22,7 +22,6 @@ from acts.examples.odd import getOpenDataDetector
 u = acts.UnitConstants
 geoDir = getOpenDataDetectorDirectory()
 outputDir = pathlib.Path.cwd() / "odd_output"
-# acts.examples.dump_args_calls(locals())  # show python binding calls
 
 oddMaterialMap = geoDir / "data/odd-material-maps.root"
 oddDigiConfig = geoDir / "config/odd-digi-smearing-config.json"
