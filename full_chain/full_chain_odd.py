@@ -22,6 +22,10 @@ from acts.examples.odd import getOpenDataDetector
 u = acts.UnitConstants
 geoDir = getOpenDataDetectorDirectory()
 outputDir = pathlib.Path.cwd() / "odd_output"
+outputDirCsv = outputDir / "csv"
+
+outputDir.mkdir(parents=True, exist_ok=True)
+outputDirCsv.mkdir(parents=True, exist_ok=True)
 
 oddMaterialMap = geoDir / "data/odd-material-maps.root"
 oddDigiConfig = geoDir / "config/odd-digi-smearing-config.json"
@@ -34,7 +38,7 @@ detector, trackingGeometry, decorators = getOpenDataDetector(
 field = acts.ConstantBField(acts.Vector3(0.0, 0.0, 2.0 * u.T))
 rnd = acts.examples.RandomNumbers(seed=42)
 
-s = acts.examples.Sequencer(events=100, numThreads=-1, outputDir=str(outputDir))
+s = acts.examples.Sequencer(events=1000, numThreads=-1, outputDir=str(outputDir))
 
 addParticleGun(
     s,
@@ -42,6 +46,8 @@ addParticleGun(
     EtaConfig(-3.0, 3.0, uniform=True),
     ParticleConfig(2, acts.PdgParticle.eMuon, randomizeCharge=True),
     rnd=rnd,
+    outputDirRoot=outputDir,
+    outputDirCsv=outputDirCsv,
 )
 
 addFatras(
@@ -50,6 +56,7 @@ addFatras(
     field,
     rnd=rnd,
     outputDirRoot=outputDir,
+    outputDirCsv=outputDirCsv,
 )
 
 addDigitization(
@@ -59,6 +66,7 @@ addDigitization(
     digiConfigFile=oddDigiConfig,
     rnd=rnd,
     outputDirRoot=outputDir,
+    outputDirCsv=outputDirCsv,
 )
 
 addSeeding(
@@ -75,6 +83,7 @@ addCKFTracks(
     field,
     CKFPerformanceConfig(ptMin=1.0 * u.GeV, nMeasurementsMin=6),
     outputDirRoot=outputDir,
+    outputDirCsv=outputDirCsv,
 )
 
 addVertexFitting(
